@@ -708,6 +708,8 @@ bool Estimator::visualInitialAlign()
     }
     ROS_DEBUG_STREAM("g0     " << g.transpose());
     ROS_DEBUG_STREAM("my R0  " << Utility::R2ypr(Rs[0]).transpose()); 
+    ROS_INFO("g0: %f, %f, %f", g[0], g[1], g[2] );
+    ROS_INFO("my R0: %f, %f, %f", Utility::R2ypr(Rs[0])[0], Utility::R2ypr(Rs[0])[1], Utility::R2ypr(Rs[0])[2]); 
 
     f_manager.clearDepth();
     f_manager.triangulate(frame_count, Ps, Rs, tic, ric);

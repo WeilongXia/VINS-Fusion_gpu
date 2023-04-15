@@ -1,0 +1,97 @@
+%YAML:1.0
+
+#common parameters
+#support: 1 imu 1 cam; 1 imu 2 cam: 2 cam; 
+imu: 1         
+num_of_cam: 2  
+
+# imu_topic: "/camera/imu"
+imu_topic: "/mavros/imu/data_raw"
+image0_topic: "/camera/infra1/image_rect_raw"
+image1_topic: "/camera/infra2/image_rect_raw"
+output_path: "/home/hitcsc/output_vins/"
+
+cam0_calib: "left.yaml"
+cam1_calib: "right.yaml"
+image_width: 848
+image_height: 480
+
+# Extrinsic parameter between IMU and Camera.
+estimate_extrinsic: 1   # 0  Have an accurate extrinsic parameters. We will trust the following imu^R_cam, imu^T_cam, don't change it.
+                        # 1  Have an initial guess about extrinsic parameters. We will optimize around your initial guess.
+
+body_T_cam0: !!opencv-matrix
+   rows: 4
+   cols: 4
+   dt: d
+   # data: [0.99998049824532231054, 0.0046597116604245333833, -0.0041581505838241919955, 0.0023699423451810195697,
+   #        -0.0046104136706886880405, 0.99991989502380734839, 0.011787604564217767206, 0.00028255970167624452974,
+   #        0.0042127443337070301961, -0.011768203890948877274, 0.9999218780296583249, 0.0000065243848148982280859,
+   #        0.0, 0.0, 0.0, 1.0]
+#    data: [-0.0074983164039944385, -0.00154001049991585, 0.99997070138017941375, 0.061446087596342394,
+#          -0.99990529486299595686, 0.0115520725240661947, -0.007480035116634350619, 0.01408998709907240749,
+#          -0.011540214731665811187, -0.99993208668792160651, -0.0016264857479177697219, -0.061159378972067344562,
+#          0, 0, 0, 1]
+   # data: [0.99993224801048479468, -0.0036687556942283553882, 0.011047154400798830414, 0.0017751386986161178908, 
+   #        0.0036356976461984356842, 0.9999888575888871579, 0.0030110464457799167112, 0.0000019622272230368719125,
+   #        -0.011058078102656406673, -0.0029706783281405167266, 0.99993444484073406086, -0.0015317528008314545997,
+   #        0, 0, 0, 1]
+   data: [0.00421443756011924851, -0.026310490568087808, 0.99964493526557759108, 0.0712294152035096768,
+          -0.99994351875746300346, 0.00964276582695746229, 0.0044694923819153775623, 0.046465731676701467329,
+          -0.009756936558028558818, -0.99960731047410588, -0.026268365684404077462, -0.061067110406981281152,
+          0, 0, 0, 1]
+
+body_T_cam1: !!opencv-matrix
+   rows: 4
+   cols: 4
+   dt: d
+   # data: [0.99991357924373073884, 0.007677397820237888363, 0.010672001063580031964, 0.055595627846778583139,
+   #        -0.0076020545486967996248, 0.99994602110624366586, -0.0070826294855866450716, -0.0040742129316016339129,
+   #        -0.010725801164942648548, 0.0070008882651610401365, 0.99991796901189283555, -0.007716793652157630141,
+   #        0.0, 0.0, 0.0, 1.0]
+#    data: [-0.0058499216277409625, -0.00160022917746055, 0.99998160867264397087, 0.061331450420022721,
+#          -0.9999153300028118363, 0.0116332809160057121, -0.0058309176376567951852, -0.03589076712458752528,
+#          -0.011623736159992984627, -0.99993105064384758765, -0.0016681474676927813678, -0.061692366949817500934,
+#          0, 0, 0, 1]
+   # data: [0.9999240795635205731, -0.0040059019493165431199, 0.011652804753290661506, 0.096568957735246921816,
+   #        0.0039583269584624586373, 0.9999837487570070087, 0.0041029098908581711008, 0.00037332096815402259558,
+   #        -0.011669051235458726774, -0.0040564727849517731827, 0.99992368622400817873, -0.0033356256847162911505,
+   #        0, 0, 0, 1]
+   data: [0.00412256579002750923, -0.026816399717394673, 0.99963187482067795895, 0.0716547757708600666,
+          -0.99994432777779025651, 0.00959921769020214606, 0.0043813656271905931546, -0.048632793599338716238,
+          -0.0097131764284354082237, -0.99959428556086340059, -0.026775333382370101992, -0.062028208565820108188,
+          0, 0, 0, 1]
+
+#Multiple thread support
+multiple_thread: 1
+use_gpu: 1
+use_gpu_acc_flow: 1
+
+#feature traker paprameters
+max_cnt: 150            # max feature number in feature tracking
+min_dist: 30            # min distance between two features 
+freq: 10                # frequence (Hz) of publish tracking result. At least 10Hz for good estimation. If set 0, the frequence will be same as raw image 
+F_threshold: 1.0        # ransac threshold (pixel)
+show_track: 0           # publish tracking image as topic
+flow_back: 1            # perform forward and backward optical flow to improve feature tracking accuracy
+
+#optimization parameters
+max_solver_time: 0.04  # max solver itration time (ms), to guarantee real time
+max_num_iterations: 8   # max solver itrations, to guarantee real time
+keyframe_parallax: 10.0 # keyframe selection threshold (pixel)
+
+#imu parameters       The more accurate parameters you provide, the better performance
+acc_n: 0.2469397557789561          # accelerometer measurement noise standard deviation. #0.2   0.04
+gyr_n: 0.024184544004491014         # gyroscope measurement noise standard deviation.     #0.05  0.004
+acc_w: 0.0026613450113975324         # accelerometer bias random work noise standard deviation.  #0.002
+gyr_w: 4.52857120638716e-04       # gyroscope bias random work noise standard deviation.     #4.0e-5
+g_norm: 9.805         # gravity magnitude
+
+#unsynchronization parameters
+estimate_td: 1                      # online estimate time offset between camera and imu
+td: 0.00                             # initial value of time offset. unit: s. readed image clock + td = real image clock (IMU clock)
+
+#loop closure parameters
+load_previous_pose_graph: 0        # load and reuse previous pose graph; load from 'pose_graph_save_path'
+pose_graph_save_path: "/home/dji/output/pose_graph/" # save and load path
+save_image: 0                   # save image in pose graph for visualization prupose; you can close this function by setting 0 
