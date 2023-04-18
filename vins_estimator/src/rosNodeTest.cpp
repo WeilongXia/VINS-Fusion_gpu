@@ -313,7 +313,7 @@ int main(int argc, char **argv)
     ros::Subscriber sub_img0 = n.subscribe(IMAGE0_TOPIC, 100, img0_callback);
     ros::Subscriber sub_img1 = n.subscribe(IMAGE1_TOPIC, 100, img1_callback);
 
-    ros::Subscriber sub_mocap = n.subscribe("/mavros/vision_pose/pose", 100, mocap_callback);
+    ros::Subscriber sub_mocap = n.subscribe(MOCAP_TOPIC, 100, mocap_callback);
 
     std::thread sync_thread{sync_process};
     ros::spin();
