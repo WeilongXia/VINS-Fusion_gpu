@@ -1,0 +1,38 @@
+{
+  "configurations": [
+    {
+      "browse": {
+        "databaseFilename": "${default}",
+        "limitSymbolsToIncludedHeaders": false
+      },
+      "includePath": [
+        "/home/xwl/catkin_ws/devel/include/**",
+        "/opt/ros/noetic/include/**",
+        "/home/xwl/catkin_ws/src/ORB3_localization/include/**",
+        "/home/xwl/catkin_ws/src/CNN_VINS/VINS-Mono/camera_model/include/**",
+        "/home/xwl/catkin_ws/src/VINS-Fusion_gpu/camera_models/include/**",
+        "/home/xwl/catkin_ws/src/code_utils/include/**",
+        "/home/xwl/catkin_ws/src/FAST_LIO/include/**",
+        "/home/xwl/catkin_ws/src/lidar_IMU_calib/include/**",
+        "/home/xwl/catkin_ws/src/lidar_align/include/**",
+        "/home/xwl/catkin_ws/src/lidar_imu_calib/lidar_imu_calib/include/**",
+        "/home/xwl/catkin_ws/src/LiDAR_IMU_Init/include/**",
+        "/home/xwl/catkin_ws/src/msckf_vio_noted/include/**",
+        "/home/xwl/catkin_ws/src/mv_driver/include/**",
+        "/home/xwl/catkin_ws/src/lidar_imu_calib/ndt_omp/include/**",
+        "/home/xwl/catkin_ws/src/realsense-ros/realsense2_camera/include/**",
+        "/home/xwl/catkin_ws/src/velodyne/velodyne_driver/include/**",
+        "/home/xwl/catkin_ws/src/velodyne/velodyne_laserscan/include/**",
+        "/home/xwl/catkin_ws/src/velodyne/velodyne_pcl/include/**",
+        "/home/xwl/catkin_ws/src/velodyne/velodyne_pointcloud/include/**",
+        "/usr/include/**"
+      ],
+      "name": "ROS",
+      "intelliSenseMode": "gcc-x64",
+      "compilerPath": "/usr/bin/gcc",
+      "cStandard": "gnu11",
+      "cppStandard": "c++14"
+    }
+  ],
+  "version": 4
+}

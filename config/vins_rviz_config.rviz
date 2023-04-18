@@ -5,7 +5,9 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /VIOGroup1
         - /GlobalGroup1/CarModel1
+        - /Path1
       Splitter Ratio: 0.4651159942150116
     Tree Height: 594
   - Class: rviz/Selection
@@ -303,6 +305,29 @@ Visualization Manager:
           Value: true
       Enabled: true
       Name: GlobalGroup
+    - Alpha: 1
+      Buffer Length: 1
+      Class: rviz/Path
+      Color: 204; 0; 0
+      Enabled: true
+      Head Diameter: 0.30000001192092896
+      Head Length: 0.20000000298023224
+      Length: 0.30000001192092896
+      Line Style: Lines
+      Line Width: 0.029999999329447746
+      Name: Path
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0
+      Pose Color: 255; 85; 255
+      Pose Style: None
+      Radius: 0.029999999329447746
+      Shaft Diameter: 0.10000000149011612
+      Shaft Length: 0.10000000149011612
+      Topic: /vins_estimator/gt_path
+      Unreliable: false
+      Value: true
   Enabled: true
   Global Options:
     Background Color: 0; 0; 0
@@ -329,25 +354,25 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/ThirdPersonFollower
-      Distance: 3.1263227462768555
+      Distance: 10.535545349121094
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
         Swap Stereo Eyes: false
         Value: false
       Focal Point:
-        X: 1.5287301540374756
-        Y: -3.4346792697906494
-        Z: 0.3814345896244049
+        X: 1.1949574947357178
+        Y: -0.9614958763122559
+        Z: 0.38143372535705566
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5397986173629761
+      Pitch: 1.2897965908050537
       Target Frame: world
       Value: ThirdPersonFollower (rviz)
-      Yaw: 4.5606231689453125
+      Yaw: 3.00561261177063
     Saved: ~
 Window Geometry:
   Displays:

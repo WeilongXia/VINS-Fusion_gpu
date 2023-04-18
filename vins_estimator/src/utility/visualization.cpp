@@ -26,12 +26,16 @@ ros::Publisher pub_keyframe_pose;
 ros::Publisher pub_keyframe_point;
 ros::Publisher pub_extrinsic;
 
+bool if_init_pose = false;
+Eigen::Matrix4d initial_pose = Eigen::Matrix4d::Identity();
+ros::Publisher pub_posestamped;
 nav_msgs::Path gt_path;
 ros::Publisher pub_ground_truth, pub_gt_path;
 
 CameraPoseVisualization cameraposevisual(1, 0, 0, 1);
 static double sum_of_path = 0;
 static Vector3d last_path(0.0, 0.0, 0.0);
+
 
 size_t pub_counter = 0;
 
@@ -52,6 +56,7 @@ void registerPub(ros::NodeHandle &n)
     pub_keyframe_point = n.advertise<sensor_msgs::PointCloud>("keyframe_point", 1000);
     pub_extrinsic = n.advertise<nav_msgs::Odometry>("extrinsic", 1000);
 
+    pub_posestamped = n.advertise<geometry_msgs::PoseStamped>("posestamped", 1000);
     pub_gt_path = n.advertise<nav_msgs::Path>("gt_path", 1000);
     pub_ground_truth = n.advertise<nav_msgs::Odometry>("ground_truth", 1000);
 
@@ -125,19 +130,41 @@ void pubOdometry(const Estimator &estimator, const std_msgs::Header &header)
 {
     if (estimator.solver_flag == Estimator::SolverFlag::NON_LINEAR)
     {
+        if(!if_init_pose)
+        {
+            if_init_pose = true;
+
+            // Eigen::Quaterniond init_q(estimator.Rs[WINDOW_SIZE]);
+            initial_pose.block<3, 3>(0, 0) = estimator.Rs[WINDOW_SIZE];
+            initial_pose.block<3, 1>(0, 3) << estimator.Ps[WINDOW_SIZE].x(), estimator.Ps[WINDOW_SIZE].y(), estimator.Ps[WINDOW_SIZE].z();
+        }
+
         nav_msgs::Odometry odometry;
         odometry.header = header;
         odometry.header.frame_id = "world";
         odometry.child_frame_id = "world";
+
+        Eigen::Matrix4d trans_pose = Eigen::Matrix4d::Identity();
+        trans_pose.block<3, 3>(0, 0) = estimator.Rs[WINDOW_SIZE];
+        trans_pose.block<3, 1>(0, 3) << estimator.Ps[WINDOW_SIZE].x(), estimator.Ps[WINDOW_SIZE].y(), estimator.Ps[WINDOW_SIZE].z();
+        trans_pose = initial_pose.inverse() * trans_pose;
+
         Quaterniond tmp_Q;
         tmp_Q = Quaterniond(estimator.Rs[WINDOW_SIZE]);
         odometry.pose.pose.position.x = estimator.Ps[WINDOW_SIZE].x();
         odometry.pose.pose.position.y = estimator.Ps[WINDOW_SIZE].y();
         odometry.pose.pose.position.z = estimator.Ps[WINDOW_SIZE].z();
+
+        // odometry.pose.pose.position.x = trans_pose(0, 1);
+        // odometry.pose.pose.position.y = trans_pose(0, 1);
+        // odometry.pose.pose.position.z = trans_pose(0, 1);
+        // tmp_Q = Quaterniond(trans_pose.block<3, 3>(0, 0));
         odometry.pose.pose.orientation.x = tmp_Q.x();
         odometry.pose.pose.orientation.y = tmp_Q.y();
         odometry.pose.pose.orientation.z = tmp_Q.z();
         odometry.pose.pose.orientation.w = tmp_Q.w();
+
+        // TODO: transform velocity
         odometry.twist.twist.linear.x = estimator.Vs[WINDOW_SIZE].x();
         odometry.twist.twist.linear.y = estimator.Vs[WINDOW_SIZE].y();
         odometry.twist.twist.linear.z = estimator.Vs[WINDOW_SIZE].z();
@@ -151,6 +178,8 @@ void pubOdometry(const Estimator &estimator, const std_msgs::Header &header)
         path.header.frame_id = "world";
         path.poses.push_back(pose_stamped);
         pub_path.publish(path);
+
+        pub_posestamped.publish(pose_stamped);
 
         // write result to file
         // ofstream foutC(VINS_RESULT_PATH, ios::app);
